@@ -11,24 +11,25 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings("all")
 public class ${tableName}Update {
 
-private Logger logger = LoggerFactory.getLogger(${tableName}Update.class);
+    private Logger logger = LoggerFactory.getLogger(${tableName}Update.class);
 
-public String updateByIdSelective (${tableName} ${var}) {
-SQL sql = new SQL();
-sql.UPDATE("${fullTableName}");
+    public String updateByIdSelective (${tableName} ${var}) {
+        SQL sql = new SQL();
+        sql.UPDATE("${fullTableName}");
 
-<#list columnList as column>
-    <#if column.pri ??>
-    <#else >
-    if (${var}.get${column.columnNameCap}() != null) {
-    sql.SET("${column.fullColumnName} = ${column.columnName}");
+        <#list columnList as column>
+        <#if column.pri ??>
+        <#else >
+        if (${var}.get${column.columnNameCap}() != null) {
+            sql.SET("${column.fullColumnName} = ${column.columnName}");
+        }
+        </#if>
+        </#list>
+
+        sql.WHERE("${primaryColumn} = ${columnName}");
+
+        String sqlResult = sql.toString();
+        logger.debug("通过Provider拼接好的SQL-->{}", sqlResult);
+        return sqlResult;
     }
-    </#if>
-</#list>
-sql.WHERE("${primaryColumn} = ${columnName}");
-
-String sqlResult = sql.toString();
-logger.debug("通过Provider拼接好的SQL-->{}", sqlResult);
-return sqlResult;
-}
 }
