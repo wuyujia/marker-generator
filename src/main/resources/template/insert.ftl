@@ -1,6 +1,8 @@
 package com.cloud.dao.sql.utils;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.math.BigDecimal;
@@ -63,5 +65,44 @@ public class ${table_name}Insert {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public <O> ${table_name}Insert putParam(O obj) {
+        if (obj == null)
+            return null;
+
+        Class clazz = this.getClass();
+        Method[] methods = clazz.getMethods();
+        Map<String, Method> methodsMap = new HashMap<>();
+        for (Method method : methods) {
+            String name = method.getName();
+            if (name.equals("copyProperties") || name.equals("getBean") || name.equals("getMap") || name.equals("putParam") || name.equals("build")) {
+                continue;
+            }
+            methodsMap.put(name, method);
+        }
+        Field[] declaredFields = obj.getClass().getDeclaredFields();
+        for (Field field : declaredFields) {
+            field.setAccessible(true);
+            String name = field.getName();
+            if (methodsMap.containsKey(name)) {
+                Method method = methodsMap.get(name);
+                Class<?>[] parameterTypes = method.getParameterTypes();
+                if (parameterTypes.length != 1) {
+                    continue;
+                }
+                if (parameterTypes[0].getSimpleName().equals(field.getType().getSimpleName())) {
+                    try {
+                        if (field.get(obj) != null)
+                            method.invoke(this, field.get(obj));
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return this;
     }
 }

@@ -23,7 +23,7 @@ import java.util.*;
 @SuppressWarnings("all")
 public class Execute {
 
-    public void execute (DatabBaseConfig config, QueryTableList tableList, String exportPath, String... templates) throws SQLException, IOException, TemplateException {
+    public void execute(DatabBaseConfig config, QueryTableList tableList, String exportPath, String... templates) throws SQLException, IOException, TemplateException {
         // 获取执行对象
         QueryRunner queryRunner = config.getQueryRunner();
         String database = config.getDatabase();
@@ -53,7 +53,7 @@ public class Execute {
         System.out.println("生成成功");
     }
 
-    private Map<String, Object> getModelContent (List<Map<String, Object>> tableFields) {
+    private Map<String, Object> getModelContent(List<Map<String, Object>> tableFields) {
         /** 创建返回结果集, 包含内容为
          *  {
          *      table_name:
@@ -108,7 +108,7 @@ public class Execute {
         return modelContent;
     }
 
-    private Map<String, Object> getModelContentForUpdate (List<Map<String, Object>> tableFields) {
+    private Map<String, Object> getModelContentForUpdate(List<Map<String, Object>> tableFields) {
 
         Map<String, Object> modelContent = new LinkedHashMap<>();
         // 新建字段集合
@@ -162,7 +162,7 @@ public class Execute {
         return modelContent;
     }
 
-    private Map<String, Object> getModelContentForBean (List<Map<String, Object>> tableFields) {
+    private Map<String, Object> getModelContentForBean(List<Map<String, Object>> tableFields) {
 
         Map<String, Object> modelContent = new LinkedHashMap<>();
         // 新建字段集合
@@ -216,7 +216,7 @@ public class Execute {
         return modelContent;
     }
 
-    private Map<String, Object> getModelContentToHump (List<Map<String, Object>> tableFields) {
+    private Map<String, Object> getModelContentToHump(List<Map<String, Object>> tableFields) {
         /** 创建返回结果集, 包含内容为
          *  {
          *      table_name:
@@ -251,7 +251,7 @@ public class Execute {
             column.put("method", HumpTransferUtils.underLineToHump((String) field.get("column_name")));
             // 对数据类型进行转换
             String data_type = (String) field.get("data_type");
-            if (data_type.equalsIgnoreCase("int") || data_type.equalsIgnoreCase("tinyint")) {
+            if (data_type.equalsIgnoreCase("int")) {
                 data_type = "Integer";
             } else if (data_type.equalsIgnoreCase("varchar") || data_type.equalsIgnoreCase("text")) {
                 data_type = "String";
@@ -259,6 +259,8 @@ public class Execute {
                 data_type = "BigDecimal";
             } else if (data_type.equalsIgnoreCase("bigint")) {
                 data_type = "Long";
+            } else if (data_type.equalsIgnoreCase("tinyint")) {
+                data_type = "Byte";
             }
             column.put("data_type", data_type);
             column.put("var", HumpTransferUtils.underLineToHump((String) field.get("column_name")));
@@ -269,7 +271,7 @@ public class Execute {
         return modelContent;
     }
 
-    private void exportQuery (Map<String, Object> modelContent, String exportPath) throws IOException, TemplateException {
+    private void exportQuery(Map<String, Object> modelContent, String exportPath) throws IOException, TemplateException {
         Template template = FreeMarkerUtils.createConfiguration("/template").getTemplate("query.ftl");
         File path = new File(exportPath);
         if (!path.exists()) {
@@ -281,7 +283,7 @@ public class Execute {
         out.close();
     }
 
-    private void exportSQL (Map<String, Object> modelContent, String exportPath) throws IOException, TemplateException {
+    private void exportSQL(Map<String, Object> modelContent, String exportPath) throws IOException, TemplateException {
         Template template = FreeMarkerUtils.createConfiguration("/template").getTemplate("sql.ftl");
         File path = new File(exportPath);
         if (!path.exists()) {
@@ -293,7 +295,7 @@ public class Execute {
         out.close();
     }
 
-    private void exportInsert (Map<String, Object> modelContent, String exportPath) throws IOException, TemplateException {
+    private void exportInsert(Map<String, Object> modelContent, String exportPath) throws IOException, TemplateException {
         Template template = FreeMarkerUtils.createConfiguration("/template").getTemplate("insert.ftl");
         File path = new File(exportPath);
         if (!path.exists()) {
@@ -305,7 +307,7 @@ public class Execute {
         out.close();
     }
 
-    private void exportUpdate (Map<String, Object> modelContent, String exportPath, String templateName, String fileName) throws IOException, TemplateException {
+    private void exportUpdate(Map<String, Object> modelContent, String exportPath, String templateName, String fileName) throws IOException, TemplateException {
         Template template = FreeMarkerUtils.createConfiguration("/template").getTemplate(templateName);
         File path = new File(exportPath);
         if (!path.exists()) {
