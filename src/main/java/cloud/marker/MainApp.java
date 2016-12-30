@@ -16,9 +16,9 @@ import java.sql.SQLException;
 public class MainApp {
 
     public static void main (String[] args) throws IOException, TemplateException, ClassNotFoundException, SQLException {
-        String username = "root";
-        String password = "root";
-        String ip = "127.0.0.1";
+        String ip = args[0];
+        String username = args[1];
+        String password = args[2];
         String port = null; // 配置里面默认3306
         DatabBaseConfig config = DatabBaseConfig.create(ip, port, username, password).database("ecmall").build();
         QueryTableList tableList = QueryTableList.create()
