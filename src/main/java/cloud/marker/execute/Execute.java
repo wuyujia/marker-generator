@@ -45,6 +45,10 @@ public class Execute {
                 } else if (template.equals(Constant.Template.UPDATE)) {
                     Map<String, Object> modelContentForUpdate = this.getModelContentForUpdate(query);
                     exportUpdate(modelContentForUpdate, exportPath, Constant.templates.get(Constant.Template.UPDATE), Constant.FileName.UPDATE);
+                } else if (template.equals(Constant.Template.UTIL)) {
+                    Map<String, Object> modelContentToHump = this.getModelContentToHump(query);
+                    /**注意, 这个是使用驼峰*/
+                    exportUtil(modelContentToHump, exportPath);
                 }
                 Map<String, Object> modelContentForBean = this.getModelContentForBean(query);
                 exportUpdate(modelContentForBean, exportPath, Constant.templates.get(Constant.Template.BEAN), Constant.FileName.BEAN);
@@ -302,6 +306,18 @@ public class Execute {
             path.mkdirs();
         }
         File outFile = new File(path, (String) modelContent.get("table_name") + "Insert.java");
+        FileWriter out = new FileWriter(outFile);
+        template.process(modelContent, out);
+        out.close();
+    }
+
+    private void exportUtil(Map<String, Object> modelContent, String exportPath) throws IOException, TemplateException {
+        Template template = FreeMarkerUtils.createConfiguration("/template").getTemplate("util.ftl");
+        File path = new File(exportPath);
+        if (!path.exists()) {
+            path.mkdirs();
+        }
+        File outFile = new File(path, (String) modelContent.get("table_name") + "Util.java");
         FileWriter out = new FileWriter(outFile);
         template.process(modelContent, out);
         out.close();

@@ -24,6 +24,7 @@ public class Constant {
         public static final String SQL = "sql";
         public static final String UPDATE = "update";
         public static final String BEAN = "bean";
+        public static final String UTIL = "util";
     }
 
     public class FileName {
@@ -32,6 +33,7 @@ public class Constant {
         public static final String SQL = "Qql";
         public static final String UPDATE = "Update";
         public static final String BEAN = "";
+        public static final String UTIL = "Util";
     }
 
 }
