@@ -22,7 +22,7 @@ public class MainApp {
         String port = null; // 配置里面默认3306
         DatabBaseConfig config = DatabBaseConfig.create(ip, port, username, password).database("ecmall").build();
         QueryTableList tableList = QueryTableList.create()
-                .addTable("cloud_order_buy_detail");
+                .addTable("cloud_order_buy");
                 
         String absolutePath = FreeMarkerUtils.getAbsolutePath("src/main/java/com/cloud/dao/sql/utils/");
 
